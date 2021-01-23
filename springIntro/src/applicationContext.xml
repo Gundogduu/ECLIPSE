@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+  
+	<!-- SPRING IoC İLE...
+	 ilk olarak; XML de comment line-yorum satırı bu şekilde yapılıyor.
+İkinci konu ise beans xml'de class anlamında kullanılınır.Ve xml beans'inin ana içeriği yukarıdaki gibidir.Şimdi kendi kodlarımızı alta yazalım... -->
+	
+	<!-- öncelikle bir tekil fasulye oluşturuyoruz ve buna bir isim veriyoruz.Örneğin müşteriye gittik ve müşteri oracle ile çalışmak istediğini söyledi hemen id ye gelip oracle yazıyoruz.
+	Yada oracle demeyelim database diyelim.Daha sonra bu bean'e bir parametre daha ekliyoruz = class.Çünkü bunun bir class attribute'ü var.
+	Peki bu nereye karşılık gelecek? Yani database için üreteceğim nesne ne? Örneğin bu müşterimiz için springIntro altında CustomerDal.
+	Yani bu şu demek database isimli bir talep gelirse Oracle üret.Tabi biz başında yazmadık biz sırf senaryoyu göstermek için Oracle olarak değiştirebiliriz bunu.Veya MySql ile çalışıyor...Yine configration'u MySql yapmanız yeterli.
+	Örneğin MySql ile çalıştığını varsayalım... Tekrarlıyorum arkadaşlar database isminde bir bean talebinde bulunursa arka tarafta MySqlCustomerDal'ı bizim için newliyor ve newlenmiş datayı,nesneyi bize veriyor.
+	Gelelim bakalım main'e... -->
+	
+	<context:property-placeholder location = "classpath:values.properties"/>               <!--Property dosyasiyla injection.Bu yöntem değerleri tek merkezden değiştirmemize yarıyor.İlerde birden fazla yerde değer girmek durumunda kaldığımızda tek merkezden halletmek için bu yöntemi kullanmalıyız
+																							value'deki "${}" icerisine properties dosyasındaki değeri vermemiz gerekiyor-->
+	
+	<bean id = "database" class = "springIntro.CustomerDal">
+	<property name = "connectionString" value = "${database.connectionString}"></property>          <!-- Metin injection da value= "-Oracle String"-,property dosya injectionda "${}" idi unutma!-->
+	</bean> 
+	
+	<bean id = "service" class = "springIntro.CustomerManager">
+	<constructor-arg ref = "database"/>      <!--refereans geç.Kim için database'de ne verilmişse onun için demek - constructor injection -->
+	<!-- <property name = "customerDal" ref = "database"></property> propertyden biri customerdal ise referans olarak database'i ver demek - setter injection -->		
+	</bean>	
+
+</beans>
